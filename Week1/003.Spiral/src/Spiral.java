@@ -17,13 +17,15 @@ public class Spiral extends Application {
         primaryStage.setTitle("Spiral");
         primaryStage.show();
     }
-    
-    
+
+
     public void draw(FXGraphics2D graphics) {
+//        float x = 2 * Math.cos(3 * φ) + 0 * Math.cos(d * φ);
+//        float y = 2 * Math.sin(3 * φ) + 0 * Math.sin(d * φ);
     }
-    
-    
-    
+
+
+
     public static void main(String[] args) {
         launch(Spiral.class);
     }
