@@ -33,21 +33,25 @@ public class YingYang extends Application {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.translate(20, 20);
         Area big = new Area(new Ellipse2D.Double(0,0,400,400));
         Area whiteMedium = new Area(new Ellipse2D.Double(100,0,200,200));
         Area blackMedium = new Area(new Ellipse2D.Double(100,200,200,200));
-        Area whiteSmall = new Area(new Ellipse2D.Double(0,0,100,100));
-        Area blackSmall = new Area(new Ellipse2D.Double(0,0,100,100));
-        GeneralPath path = new GeneralPath();
+        Area whiteSmall = new Area(new Ellipse2D.Double(175,275,50,50));
+        Area blackSmall = new Area(new Ellipse2D.Double(175,75,50,50));
+        Area rectangle = new Area(new Rectangle(200, 400));
         Area yingYang = new Area(big);
+        yingYang.subtract(rectangle);
         graphics.setColor(Color.BLACK);
-        graphics.draw(big);
-        graphics.fill(big);
+        graphics.fill(yingYang);
         graphics.setColor(Color.WHITE);
         graphics.fill(whiteMedium);
         graphics.setColor(Color.BLACK);
-        path.moveTo(200, 0);
-        graphics.fill(path);
+        graphics.fill(blackMedium);
+        graphics.draw(big);
+        graphics.fill(blackSmall);
+        graphics.setColor(Color.WHITE);
+        graphics.fill(whiteSmall);
 
 
     }
