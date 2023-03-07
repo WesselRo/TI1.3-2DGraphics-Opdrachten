@@ -33,6 +33,9 @@ public class GradientPaintExercise extends Application {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        Area area = new Area(new Rectangle((int) canvas.getWidth(), (int) canvas.getHeight()));
+        graphics.setPaint(new RadialGradientPaint());
+        graphics.fill(area);
     }
 
 
