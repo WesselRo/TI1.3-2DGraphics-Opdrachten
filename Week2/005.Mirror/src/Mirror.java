@@ -33,6 +33,19 @@ public class Mirror extends Application {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.translate((int) canvas.getWidth()/2, (int) canvas.getHeight()/2);
+
+        graphics.setColor(Color.black);
+        graphics.drawLine(-1000,0,1000,0);
+        graphics.drawLine(0,-1000,0,1000);
+
+        Rectangle rectangle = new Rectangle(100, 100);
+        rectangle.setLocation(0-((int)rectangle.getWidth()/2), 150-((int)rectangle.getHeight()/2));
+        graphics.draw(rectangle);
+        graphics.setColor(Color.BLUE);
+        rectangle.setLocation((int)(2.5*rectangle.getX())-((int)rectangle.getWidth()/2), ((int)(rectangle.getY()/2.5)-((int)rectangle.getHeight()/2)));
+        graphics.draw(rectangle);
+
     }
 
 

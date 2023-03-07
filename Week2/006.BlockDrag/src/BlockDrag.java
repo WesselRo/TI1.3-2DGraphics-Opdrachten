@@ -15,6 +15,8 @@ import org.jfree.fx.ResizableCanvas;
 
 public class BlockDrag extends Application {
     ResizableCanvas canvas;
+    private int newX;
+    private int newY;
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -49,15 +51,19 @@ public class BlockDrag extends Application {
 
     private void mousePressed(MouseEvent e)
     {
+
     }
 
     private void mouseReleased(MouseEvent e)
     {
-
+        newX = (int)e.getX();
+        newY = (int)e.getY();
     }
 
     private void mouseDragged(MouseEvent e)
     {
+        newX = (int)e.getX();
+        newY = (int)e.getY();
     }
 
 }
