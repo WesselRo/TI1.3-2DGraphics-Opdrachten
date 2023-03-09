@@ -26,9 +26,7 @@ public class BlockDrag extends Application {
         primaryStage.setTitle("Block Dragging");
         primaryStage.show();
 
-        canvas.setOnMousePressed(e -> mousePressed(e));
-        canvas.setOnMouseReleased(e -> mouseReleased(e));
-        canvas.setOnMouseDragged(e -> mouseDragged(e));
+
 
         draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
     }
@@ -44,8 +42,14 @@ public class BlockDrag extends Application {
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
 
+        AffineTransform tx = new AffineTransform();
+        tx.translate(location.getX() - block.getWidth()/2, location.getY() - block.getHeight()/2);
 
         graphics.draw(block);
+        canvas.setOnMousePressed(e -> mousePressed(e));
+        canvas.setOnMouseReleased(e -> mouseReleased(e));
+        canvas.setOnMouseDragged(e -> mouseDragged(e));
+
     }
 
 
@@ -53,26 +57,32 @@ public class BlockDrag extends Application {
     {
         launch(BlockDrag.class);
     }
-
+private boolean onBlock = false;
+    private int xdif;
+    private int ydif;
     private void mousePressed(MouseEvent e)
     {
-//        Point2D mouseLocation = new Point2D.Double(e.getX(), e.getY());
-//
-//        if(mouseLocation.getX()>=locationBlockMid.getX()-(block.getWidth()/2)&& mouseLocation.getX()<=locationBlockMid.getX()+(block.getWidth()/2)&& mouseLocation.getY()>=locationBlockMid.getY()-(block.getHeight()/2)&& mouseLocation.getY()<=locationBlockMid.getY()+(block.getHeight()/2)){
-//            locationOnBlock = new Point2D.Double(e.getX(), e.getY());
-        location = new Point2D.Double(e.getX(), e.getY());
-
-    //}
+        Point2D mouseLocation = new Point2D.Double(e.getX(), e.getY());
+        if(mouseLocation.getX()>=location.getX()&&mouseLocation.getX()<=location.getX()+block.getWidth()&&mouseLocation.getY()>=location.getY()&&mouseLocation.getY()<=location.getY()+block.getHeight()){
+            locationOnBlock = mouseLocation;
+            onBlock = true;
+            xdif = (int)locationOnBlock.getX()-(int)location.getX();
+            ydif = (int)locationOnBlock.getY()-(int)location.getY();
+        }
     }
 
     private void mouseReleased(MouseEvent e)
     {
+        onBlock = false;
     }
 
     private void mouseDragged(MouseEvent e)
     {
-       location = new Point2D.Double(e.getX(), e.getY());
-
+        if(onBlock) {
+            location = new Point2D.Double((int)e.getX()-xdif, (int)e.getY()-ydif);
+            block.setLocation((int)location.getX(), (int)location.getY());
+            draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
+        }
     }
 
 }
