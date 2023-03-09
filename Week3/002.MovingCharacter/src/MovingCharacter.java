@@ -21,6 +21,8 @@ import org.jfree.fx.ResizableCanvas;
 public class MovingCharacter extends Application {
     private ResizableCanvas canvas;
 
+    private BufferedImage image;
+
     @Override
     public void start(Stage stage) throws Exception
     {
@@ -29,19 +31,24 @@ public class MovingCharacter extends Application {
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
         FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
-        new AnimationTimer() {
-            long last = -1;
-
-            @Override
-            public void handle(long now)
-            {
-                if (last == -1)
-                    last = now;
-                update((now - last) / 1000000000.0);
-                last = now;
-                draw(g2d);
-            }
-        }.start();
+//        new AnimationTimer() {
+//            long last = -1;
+//
+//            @Override
+//            public void handle(long now)
+//            {
+//                if (last == -1)
+//                    last = now;
+//                update((now - last) / 1000000000.0);
+//                last = now;
+//                draw(g2d);
+//            }
+//        }.start();
+        try {
+            image = ImageIO.read(getClass().getResource("/images/sprite.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         stage.setScene(new Scene(mainPane));
         stage.setTitle("Moving Character");
@@ -52,9 +59,11 @@ public class MovingCharacter extends Application {
 
     public void draw(FXGraphics2D graphics)
     {
-        graphics.setTransform(new AffineTransform());
-        graphics.setBackground(Color.white);
-        graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        AffineTransform tx = new AffineTransform();
+        tx.translate(400,400);
+        tx.rotate(Math.toRadians(45.0f), image.getWidth()/2, image.getHeight()/2);
+        tx.scale(0.75f, 0.75f);
+        graphics.drawImage(image, tx, null);
     }
 
 

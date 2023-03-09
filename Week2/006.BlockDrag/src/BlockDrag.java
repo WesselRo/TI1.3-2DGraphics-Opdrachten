@@ -15,8 +15,6 @@ import org.jfree.fx.ResizableCanvas;
 
 public class BlockDrag extends Application {
     ResizableCanvas canvas;
-    private int newX;
-    private int newY;
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -35,12 +33,19 @@ public class BlockDrag extends Application {
         draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
     }
 
+    private Point2D location = new Point2D.Double(20,30);
+    private Rectangle block = new Rectangle((int)location.getX(), (int)location.getY(),60, 60);
+    private Point2D locationBlockMid = new Point2D.Double(location.getX()+(block.getWidth()/2), location.getY()+(block.getHeight()/2));
+    private Point2D locationOnBlock;
 
     public void draw(FXGraphics2D graphics)
     {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+
+
+        graphics.draw(block);
     }
 
 
@@ -51,19 +56,23 @@ public class BlockDrag extends Application {
 
     private void mousePressed(MouseEvent e)
     {
+//        Point2D mouseLocation = new Point2D.Double(e.getX(), e.getY());
+//
+//        if(mouseLocation.getX()>=locationBlockMid.getX()-(block.getWidth()/2)&& mouseLocation.getX()<=locationBlockMid.getX()+(block.getWidth()/2)&& mouseLocation.getY()>=locationBlockMid.getY()-(block.getHeight()/2)&& mouseLocation.getY()<=locationBlockMid.getY()+(block.getHeight()/2)){
+//            locationOnBlock = new Point2D.Double(e.getX(), e.getY());
+        location = new Point2D.Double(e.getX(), e.getY());
 
+    //}
     }
 
     private void mouseReleased(MouseEvent e)
     {
-        newX = (int)e.getX();
-        newY = (int)e.getY();
     }
 
     private void mouseDragged(MouseEvent e)
     {
-        newX = (int)e.getX();
-        newY = (int)e.getY();
+       location = new Point2D.Double(e.getX(), e.getY());
+
     }
 
 }
