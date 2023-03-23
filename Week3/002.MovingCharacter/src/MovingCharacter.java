@@ -1,31 +1,28 @@
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import org.jfree.fx.FXGraphics2D;
+import org.jfree.fx.ResizableCanvas;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-
-import static javafx.application.Application.launch;
-
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-
-import javax.imageio.ImageIO;
-
-import org.jfree.fx.FXGraphics2D;
-import org.jfree.fx.ResizableCanvas;
-
 public class MovingCharacter extends Application {
     private ResizableCanvas canvas;
 
-    private BufferedImage image;
-    private ArrayList<BufferedImage> images = new ArrayList<>();
+    private BufferedImage[] image = new BufferedImage[17];
     private int x;
     private int teller = 0;
+    private int numberOfHorizontalSprites = 8;
+    private double spriteWidth = 64;
+    private double spriteHeight = 64;
+    private int row = 4;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -45,13 +42,18 @@ public class MovingCharacter extends Application {
                 last = now;
                 draw(g2d);
             }
+
         }.start();
+        BufferedImage total = null;
         try {
-            image = ImageIO.read(getClass().getResource("/images/sprite.png"));
-            for (int i = 0; i < 8; i++) {
-                images.add(image.getSubimage(64 * i, 64 * 4, 64, 64));
+            total = ImageIO.read(getClass().getResource("images/sprite.png"));
+            for (int i = 0; i < numberOfHorizontalSprites; i++) {
+                image[i] = total.getSubimage((int) spriteWidth * i, (int) spriteHeight * 4, (int) spriteWidth, (int) spriteHeight);
             }
-            image = image.getSubimage(64 * 4, 64 * 1, 64, 64);
+            for (int i = 0; i < numberOfHorizontalSprites; i++) {
+                image[8 + i] = total.getSubimage((int) spriteWidth * i, (int) spriteHeight * 5, (int) spriteWidth, (int) spriteHeight);
+            }
+            image[16] = total.getSubimage(8, 0, (int) spriteWidth, (int) spriteHeight);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +63,7 @@ public class MovingCharacter extends Application {
         stage.setTitle("Moving Character");
         stage.show();
         draw(g2d);
+        canvas.setOnMouseClicked(event -> jump());
     }
 
 
@@ -68,22 +71,38 @@ public class MovingCharacter extends Application {
         AffineTransform tx = new AffineTransform();
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setBackground(Color.white);
-        tx.translate(x,100);
-//        tx.rotate(angle, image.getWidth()/2, image.getHeight()/2);
+        tx.translate(x, 100);
         tx.scale(0.75f, 0.75f);
-        graphics.drawImage(image, tx, null);
+        graphics.drawImage(image[teller2], tx, null);
     }
 
+    int teller2 = 0;
+    boolean jumping = false;
 
     public void update(double deltaTime) {
-        x += 1;
+        if (teller2 < 8) {
+            x += 1;
+        }
         teller++;
-        if(teller==70){
+
+        if (teller == numberOfHorizontalSprites * 10) {
             teller = 0;
+            if (jumping) {
+                teller2 = 8;
+            } else {
+                teller2 = 0;
+            }
+        } else if (teller % 10 == 0) {
+            teller2++;
         }
-        else if(teller%10 == 0){
-            image = images.get(teller/10);
+        if (teller2 == 15) {
+            jumping = false;
         }
+    }
+
+    public void jump() {
+
+        jumping = true;
     }
 
     public static void main(String[] args) {
