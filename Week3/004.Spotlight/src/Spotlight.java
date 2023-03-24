@@ -61,15 +61,15 @@ public class Spotlight extends Application {
         Shape shape = new Rectangle2D.Double(location.getX()-50, location.getY()-50, 100, 100);
         graphics.setColor(Color.BLUE);
         graphics.draw(shape);
-        graphics.setClip(shape);
+        graphics.clip(shape);
 
         AffineTransform tx = new AffineTransform();
         graphics.drawImage(puzzel, tx, null);
 
         canvas.setOnMouseMoved(event -> {
             location.setLocation(event.getX(), event.getY());
-            graphics.setClip(null);
         });
+        graphics.setClip(null);
     }
 
     public void init() {

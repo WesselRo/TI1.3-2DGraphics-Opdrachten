@@ -20,6 +20,7 @@ public class VerletEngine extends Application {
     private ResizableCanvas canvas;
     private ArrayList<Particle> particles = new ArrayList<>();
     private ArrayList<Constraint> constraints = new ArrayList<>();
+    private ArrayList<DistanceConstraint> distanceConstraints = new ArrayList<>();
     private PositionConstraint mouseConstraint = new PositionConstraint(null);
 
     @Override
@@ -98,7 +99,28 @@ public class VerletEngine extends Application {
         particles.add(newParticle);
         constraints.add(new DistanceConstraint(newParticle, nearest));
 
-        if (e.getButton() == MouseButton.SECONDARY) {
+        if (e.getButton() == MouseButton.SECONDARY && e.isControlDown()) {
+            particles.add(newParticle);
+            constraints.add(new DistanceConstraint(newParticle, nearest, 100));
+            distanceConstraints.add(new DistanceConstraint(newParticle, nearest, 100));
+            ArrayList<Particle> sorted = new ArrayList<>();
+            sorted.addAll(particles);
+
+            //sorteer alle elementen op afstand tot de muiscursor. De toegevoegde particle staat op 0, de nearest op 1, en de derde op 2
+            Collections.sort(sorted, new Comparator<Particle>() {
+                @Override
+                public int compare(Particle o1, Particle o2) {
+                    return (int) (o1.getPosition().distance(mousePosition) - o2.getPosition().distance(mousePosition));
+                }
+            });
+            constraints.add(new DistanceConstraint(newParticle, sorted.get(2), 100));
+            distanceConstraints.add(new DistanceConstraint(newParticle, sorted.get(2), 100));
+        }else if (e.getButton() == MouseButton.MIDDLE) {
+            // Reset
+            particles.clear();
+            constraints.clear();
+            init();
+        }else if (e.getButton() == MouseButton.SECONDARY) {
             ArrayList<Particle> sorted = new ArrayList<>();
             sorted.addAll(particles);
 
@@ -111,11 +133,6 @@ public class VerletEngine extends Application {
             });
 
             constraints.add(new DistanceConstraint(newParticle, sorted.get(2)));
-        } else if (e.getButton() == MouseButton.MIDDLE) {
-            // Reset
-            particles.clear();
-            constraints.clear();
-            init();
         }
     }
 
@@ -136,6 +153,11 @@ public class VerletEngine extends Application {
             mouseConstraint.setParticle(nearest);
         }
     }
+
+    private void mousePressedControl(MouseEvent e) {
+
+    }
+
 
     private void mouseReleased(MouseEvent e) {
         mouseConstraint.setParticle(null);
